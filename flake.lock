@@ -1,0 +1,46 @@
+{
+  "nodes": {
+    "libft": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1713214000,
+        "narHash": "sha256-o8zjP8qJ+WxSbUjTJlWakuzSOH1eYZx2H35lPZ9J2nM=",
+        "owner": "vinicius507",
+        "repo": "libft",
+        "rev": "f38586951e214463c53299d099941026eee61898",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vinicius507",
+        "repo": "libft",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1713828541,
+        "narHash": "sha256-KtvQeE12MSkCOhvVmnmcZCjnx7t31zWin2XVSDOwBDE=",
+        "path": "/nix/store/h5g4m28iz22w31c0asl73mcir6z7x5ra-source",
+        "rev": "b500489fd3cf653eafc075f9362423ad5cdd8676",
+        "revCount": 557957,
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "libft": "libft",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
