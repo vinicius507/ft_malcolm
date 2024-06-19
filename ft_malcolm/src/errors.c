@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/19 18:40:48 by vgoncalv         ###   ########.fr       */
+/*   Created: 2024/06/19 18:43:55 by vgoncalv          #+#    #+#             */
+/*   Updated: 2024/06/19 18:46:31 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malcolm.h"
-#include <libft.h>
 #include <stdio.h>
 #include <unistd.h>
 
-static void	usage(const char *cmd)
+void	invalid_ip_addr(const char *ip_addr)
 {
-	dprintf(STDERR_FILENO,
-		"Usage: %s SOURCE_IP SOURCE_MAC TARGET_IP TARGET_MAC\n", cmd);
+	dprintf(STDERR_FILENO, "Error: invalid IPv4 address: %s\n", ip_addr);
 }
 
-int	main(int argc, char **argv)
+void	invalid_mac_addr(const char *mac_addr)
 {
-	t_host	source;
-	t_host	target;
-
-	if (parse_arguments(argc, argv, &source, &target) != 0)
-	{
-		usage(argv[0]);
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+	dprintf(STDERR_FILENO, "Error: invalid mac address: %s\n", mac_addr);
 }

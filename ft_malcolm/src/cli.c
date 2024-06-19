@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/19 18:28:52 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/19 18:47:17 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,22 +80,22 @@ int	parse_arguments(int argc, char **argv, t_host *source, t_host *target)
 		return (1);
 	if (parse_ip_addr(argv[1], &source->ip) != 0)
 	{
-		dprintf(STDERR_FILENO, "Error: invalid ip address: %s\n", argv[1]);
+		invalid_ip_addr(argv[1]);
 		return (1);
 	}
 	if (parse_mac_addr(argv[2], source->mac) != 0)
 	{
-		dprintf(STDERR_FILENO, "Error: invalid mac address: %s\n", argv[2]);
+		invalid_mac_addr(argv[2]);
 		return (1);
 	}
 	if (parse_ip_addr(argv[3], &target->ip) != 0)
 	{
-		dprintf(STDERR_FILENO, "Error: invalid ip address: %s\n", argv[3]);
+		invalid_ip_addr(argv[3]);
 		return (1);
 	}
 	if (parse_mac_addr(argv[4], target->mac) != 0)
 	{
-		dprintf(STDERR_FILENO, "Error: invalid mac address: %s\n", argv[4]);
+		invalid_mac_addr(argv[4]);
 		return (1);
 	}
 	return (0);
