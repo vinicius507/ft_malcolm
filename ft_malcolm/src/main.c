@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/18 19:54:07 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/19 17:07:24 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,23 @@ int	parse_ip_addr(const char *addr, t_ip *dest)
 	return (0);
 }
 
-int	parse_arguments(t_malcolm *app, int argc, char **argv)
+int	parse_arguments(int argc, char **argv, t_host *source, t_host *target)
 {
-	if (app == NULL || argc != 5)
+	if (argc != 5)
 		return (1);
-	if (parse_ip_addr(argv[1], &app->source.ip) != 0)
+	if (parse_ip_addr(argv[1], &source->ip) != 0)
 		return (1);
-	if (parse_ip_addr(argv[3], &app->target.ip) != 0)
+	if (parse_ip_addr(argv[3], &target->ip) != 0)
 		return (1);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_malcolm	app;
+	t_host	source;
+	t_host	target;
 
-	if (argc != 5 || parse_arguments(&app, argc, argv) != 0)
+	if (parse_arguments(argc, argv, &source, &target) != 0)
 	{
 		usage(argv[0]);
 		return (EXIT_FAILURE);
