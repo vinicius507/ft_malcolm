@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1713214000,
-        "narHash": "sha256-o8zjP8qJ+WxSbUjTJlWakuzSOH1eYZx2H35lPZ9J2nM=",
+        "lastModified": 1718818424,
+        "narHash": "sha256-ofyX9UpNXnqRxyYXcEHek0VLoWdrN9q9iOqTbWpyZaw=",
         "owner": "vinicius507",
         "repo": "libft",
-        "rev": "f38586951e214463c53299d099941026eee61898",
+        "rev": "8f46d809c95885852463a43b06cca0eb4aa6c065",
         "type": "github"
       },
       "original": {
