@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/19 18:46:50 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:31:00 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,13 @@ typedef struct s_host
 	t_mac	mac;
 }	t_host;
 
-int		parse_arguments(int argc, char **argv, t_host *source, t_host *target);
+typedef struct s_cli
+{
+	t_host	source;
+	t_host	target;
+}	t_cli;
+
+int		parse_arguments(t_cli *cli, int argc, char **argv);
 
 void	invalid_ip_addr(const char *ip_addr);
 

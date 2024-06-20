@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/19 18:47:17 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:32:28 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,26 +74,26 @@ static int	parse_mac_addr(const char *addr, t_mac dest)
 	return (0);
 }
 
-int	parse_arguments(int argc, char **argv, t_host *source, t_host *target)
+int	parse_arguments(t_cli *cli, int argc, char **argv)
 {
 	if (argc != 5)
 		return (1);
-	if (parse_ip_addr(argv[1], &source->ip) != 0)
+	if (parse_ip_addr(argv[1], &cli->source.ip) != 0)
 	{
 		invalid_ip_addr(argv[1]);
 		return (1);
 	}
-	if (parse_mac_addr(argv[2], source->mac) != 0)
+	if (parse_mac_addr(argv[2], cli->source.mac) != 0)
 	{
 		invalid_mac_addr(argv[2]);
 		return (1);
 	}
-	if (parse_ip_addr(argv[3], &target->ip) != 0)
+	if (parse_ip_addr(argv[3], &cli->target.ip) != 0)
 	{
 		invalid_ip_addr(argv[3]);
 		return (1);
 	}
-	if (parse_mac_addr(argv[4], target->mac) != 0)
+	if (parse_mac_addr(argv[4], cli->target.mac) != 0)
 	{
 		invalid_mac_addr(argv[4]);
 		return (1);
