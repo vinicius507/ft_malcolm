@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 19:09:24 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:18:52 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	poison_destroy(t_poison *poison)
 {
 	if (poison->sock_fd > 0)
 		close(poison->sock_fd);
-	if (poison->ifname != NULL)
-		free(poison->ifname);
 	free(poison);
 }
 
@@ -45,8 +43,7 @@ int	poison_init(t_poison *poison)
 {
 	struct ifreq	req;
 
-	poison->ifname = find_interface();
-	if (poison->ifname == NULL)
+	if (find_interface(poison->ifname) != 0)
 		return (1);
 	printf("Found interface: %s\n", poison->ifname);
 	poison->sock_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));

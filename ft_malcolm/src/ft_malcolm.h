@@ -6,13 +6,14 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 18:02:15 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:18:25 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_MALCOLM_H
 # define FT_MALCOLM_H
 
+# include <net/if.h>
 # include <stdint.h>
 
 # define BASE16 "0123456789ABCDEF"
@@ -36,7 +37,7 @@ typedef struct s_cli
 typedef struct s_poison
 {
 	int		sock_fd;
-	char	*ifname;
+	char	ifname[IFNAMSIZ];
 	t_host	source;
 	t_host	target;
 }	t_poison;
@@ -45,7 +46,7 @@ void		error(const char *fmt, ...);
 
 int			parse_arguments(t_cli *cli, int argc, char **argv);
 
-char		*find_interface(void);
+int			find_interface(char *ifname);
 
 t_poison	*poison_create(t_host source, t_host target);
 

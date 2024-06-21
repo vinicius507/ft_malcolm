@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:30:49 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 17:36:40 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:18:11 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,31 @@ static int	is_eth_interface(struct ifaddrs *iface)
 	return (iface->ifa_addr->sa_family == AF_PACKET);
 }
 
-char	*find_interface(void)
+int	find_interface(char *ifname)
 {
-	char			*ifname;
+	int				ret;
 	struct ifaddrs	*it;
 	struct ifaddrs	*addrs;
 
 	if (getifaddrs(&addrs) == -1)
 	{
 		error("Failed to get network interfaces: %s", strerror(errno));
-		return (NULL);
+		return (1);
 	}
+	ret = 1;
 	it = addrs;
-	ifname = NULL;
 	while (it != NULL)
 	{
 		if (is_eth_interface(it) != 0)
 		{
-			ifname = ft_strdup(it->ifa_name);
+			ret = 0;
+			ft_strlcpy(ifname, it->ifa_name, IFNAMSIZ);
 			break;
 		}
 		it = it->ifa_next;
 	}
 	freeifaddrs(addrs);
-	if (ifname == NULL)
+	if (ret == 1)
 		error("No valid network interface was found");
-	return (ifname);
+	return (ret);
 }
