@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 19:06:56 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:09:24 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ int	poison_init(t_poison *poison)
 		error("Failed to bind socket to interface: %s", strerror(errno));
 		return (1);
 	}
+	printf("Bound socket to the %s interface\n", poison->ifname);
 	return (0);
 }
