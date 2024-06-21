@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/20 16:50:03 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 18:02:15 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,24 @@ typedef struct s_cli
 	t_host	target;
 }	t_cli;
 
-void	error(const char *fmt, ...);
+typedef struct s_poison
+{
+	int		sock_fd;
+	char	*ifname;
+	t_host	source;
+	t_host	target;
+}	t_poison;
 
-int		parse_arguments(t_cli *cli, int argc, char **argv);
+void		error(const char *fmt, ...);
+
+int			parse_arguments(t_cli *cli, int argc, char **argv);
+
+char		*find_interface(void);
+
+t_poison	*poison_create(t_host source, t_host target);
+
+void		poison_destroy(t_poison *poison);
+
+int			poison_init(t_poison *poison);
 
 #endif // !FT_MALCOLM_H

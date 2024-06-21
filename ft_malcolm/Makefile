@@ -6,7 +6,7 @@
 #    By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/02 15:23:08 by vgoncalv          #+#    #+#              #
-#    Updated: 2024/06/21 18:21:54 by vgoncalv         ###   ########.fr        #
+#    Updated: 2024/06/21 18:22:12 by vgoncalv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS_DIR = ./src
 OBJS_DIR = ./build
 
 vpath %.c $(SRCS_DIR)
-SRCS = main.c cli.c error.c
+SRCS = main.c cli.c error.c poison.c interface.c
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)
