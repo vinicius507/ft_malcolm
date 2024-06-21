@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 18:22:55 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:06:56 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ t_poison	*poison_create(t_host source, t_host target)
 
 void	poison_destroy(t_poison *poison)
 {
-	close(poison->sock_fd);
-	free(poison->ifname);
+	if (poison->sock_fd > 0)
+		close(poison->sock_fd);
+	if (poison->ifname != NULL)
+		free(poison->ifname);
 	free(poison);
 }
 
