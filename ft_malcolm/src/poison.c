@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/25 17:32:39 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/25 18:56:35 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	poison_listen(t_poison *poison)
 		}
 		if (is_arp_request(packet) && is_poison_target(poison, &packet))
 		{
-			printf("Received ARP request from target\n");
+			printf("Received target ARP request\n");
 			return (0);
 		}
 	}
