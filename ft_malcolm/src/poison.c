@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 19:18:52 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:32:39 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	poison_destroy(t_poison *poison)
 	free(poison);
 }
 
-int	poison_init(t_poison *poison)
+int	poison_bind_interface(t_poison *poison)
 {
 	struct ifreq	req;
 
@@ -62,4 +62,39 @@ int	poison_init(t_poison *poison)
 	}
 	printf("Bound socket to the %s interface\n", poison->ifname);
 	return (0);
+}
+
+
+static int	is_poison_target(t_poison *poison, t_arp *packet)
+{
+	if (ft_memcmp(poison->target.mac, packet->ar_sha, 6) != 0)
+		return (0);
+	if (poison->target.ip != packet->ar_spa)
+		return (0);
+	if (poison->source.ip != packet->ar_tpa)
+		return (0);
+	return (1);
+}
+
+int	poison_listen(t_poison *poison)
+{
+	ssize_t	read;
+	t_arp	packet;
+
+	ft_bzero(&packet, sizeof(t_arp));
+	printf("Listening for ARP packets\n");
+	while (1)
+	{
+		read = recvfrom(poison->sock_fd, &packet, sizeof(t_arp), 0, NULL, NULL);
+		if (read == -1)
+		{
+			error("Failed to read ARP packet: %s", strerror(errno));
+			return (1);
+		}
+		if (is_arp_request(packet) && is_poison_target(poison, &packet))
+		{
+			printf("Received ARP request from target\n");
+			return (0);
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 19:18:25 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:22:44 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,24 @@ t_poison	*poison_create(t_host source, t_host target);
 
 void		poison_destroy(t_poison *poison);
 
-int			poison_init(t_poison *poison);
+int			poison_bind_interface(t_poison *poison);
+
+int			poison_listen(t_poison *poison);
+
+typedef struct s_arp
+{
+	uint16_t	eth_header[7];
+	uint16_t	ar_hrd;
+	uint16_t	ar_pro;
+	uint8_t		ar_hln;
+	uint8_t		ar_pln;
+	uint16_t	ar_op;
+	t_mac		ar_sha;
+	t_ip		ar_spa;
+	t_mac		ar_tha;
+	t_ip		ar_tpa;
+} __attribute__((packed))	t_arp;
+
+int	is_arp_request(t_arp packet);
 
 #endif // !FT_MALCOLM_H

@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/21 18:01:56 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/25 17:14:12 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	poison = poison_create(cli.source, cli.target);
-	if (poison_init(poison) != 0)
+	if (poison_bind_interface(poison) != 0 || poison_listen(poison) != 0)
 	{
 		poison_destroy(poison);
 		return (EXIT_FAILURE);
