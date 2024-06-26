@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/25 17:22:44 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/26 07:55:28 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@ typedef struct s_cli
 	t_host	target;
 }	t_cli;
 
+typedef struct s_iface
+{
+	int		index;
+	char	name[IFNAMSIZ];
+}	t_iface;
+
 typedef struct s_poison
 {
 	int		sock_fd;
-	char	ifname[IFNAMSIZ];
+	t_iface	iface;
 	t_host	source;
 	t_host	target;
 }	t_poison;
@@ -46,7 +52,7 @@ void		error(const char *fmt, ...);
 
 int			parse_arguments(t_cli *cli, int argc, char **argv);
 
-int			find_interface(char *ifname);
+int			find_interface(t_iface *iface);
 
 t_poison	*poison_create(t_host source, t_host target);
 
@@ -56,9 +62,13 @@ int			poison_bind_interface(t_poison *poison);
 
 int			poison_listen(t_poison *poison);
 
+int			poison_attack(t_poison *poison);
+
 typedef struct s_arp
 {
-	uint16_t	eth_header[7];
+	t_mac		eth_dst;
+	t_mac		eth_src;
+	uint16_t	eth_type;
 	uint16_t	ar_hrd;
 	uint16_t	ar_pro;
 	uint8_t		ar_hln;
@@ -70,6 +80,8 @@ typedef struct s_arp
 	t_ip		ar_tpa;
 } __attribute__((packed))	t_arp;
 
-int	is_arp_request(t_arp packet);
+int		is_arp_request(t_arp packet);
+
+t_arp	create_arp_reply(t_host *source, t_host *target);
 
 #endif // !FT_MALCOLM_H
