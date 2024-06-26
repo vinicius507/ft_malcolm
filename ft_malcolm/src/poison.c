@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/26 08:00:42 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:22:48 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,17 +86,22 @@ int	poison_listen(t_poison *poison)
 	printf("Listening for ARP packets\n");
 	while (1)
 	{
-		read = recvfrom(poison->sock_fd, &packet, sizeof(t_arp), 0, NULL, NULL);
-		if (read == -1)
+		if (g_exit_code != EXIT_SUCCESS)
+			return (1);
+		read = recvfrom(poison->sock_fd, &packet, sizeof(t_arp), MSG_DONTWAIT, NULL, NULL);
+		if (read == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
 		{
 			error("Failed to read ARP packet: %s", strerror(errno));
 			return (1);
 		}
+		if (errno == EAGAIN || errno == EWOULDBLOCK)
+			continue ;
 		if (is_arp_request(packet) && is_poison_target(poison, &packet))
 		{
 			printf("Received target ARP request\n");
 			return (0);
 		}
+		usleep(100);
 	}
 }
 
