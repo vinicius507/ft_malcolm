@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/26 16:22:48 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:33:24 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	poison_listen(t_poison *poison)
 	printf("Listening for ARP packets\n");
 	while (1)
 	{
-		if (g_exit_code != EXIT_SUCCESS)
+		if (g_received_signal != 0)
 			return (1);
 		read = recvfrom(poison->sock_fd, &packet, sizeof(t_arp), MSG_DONTWAIT, NULL, NULL);
 		if (read == -1 && errno != EAGAIN && errno != EWOULDBLOCK)

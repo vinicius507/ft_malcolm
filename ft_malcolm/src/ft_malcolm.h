@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/26 16:16:58 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:30:29 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define BASE16 "0123456789ABCDEF"
 # define MAC_SEPARATOR ':'
 
-extern int	g_exit_code;
+extern int	g_received_signal;
 
 typedef uint32_t	t_ip;
 typedef uint8_t		t_mac[6];

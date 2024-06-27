@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/26 16:27:52 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:31:30 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int	g_exit_code = EXIT_SUCCESS;
+int	g_received_signal = 0;
 
 static void	usage(const char *cmd)
 {
@@ -27,7 +27,7 @@ static void	usage(const char *cmd)
 
 static void	signal_handler(int sig)
 {
-	g_exit_code = 128 + sig;
+	g_received_signal = sig;
 }
 
 static void	register_signals(void)
@@ -54,7 +54,9 @@ int	main(int argc, char **argv)
 	if (poison_bind_interface(poison) != 0 || poison_listen(poison) != 0)
 	{
 		poison_destroy(poison);
-		return (g_exit_code ? g_exit_code : EXIT_FAILURE);
+		if (g_received_signal != 0)
+			return (g_received_signal + 128);
+		return (EXIT_FAILURE);
 	}
 	res = poison_attack(poison);
 	poison_destroy(poison);
