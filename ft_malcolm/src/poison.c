@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:48:13 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:17:40 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ t_poison	*poison_create(void)
 	t_poison	*poison;
 
 	poison = ft_calloc(1, sizeof(t_poison));
+	if (poison == NULL)
+	{
+		error(strerror(errno));
+		return (NULL);
+	}
 	poison->iface.sock_fd = -1;
 	return (poison);
 }
@@ -110,7 +115,10 @@ int	poison_attack(t_poison *poison)
 	struct sockaddr_ll	addr;
 	t_arp				packet;
 
-	packet = create_arp_reply(&poison->source, &poison->target);
+	if (poison->gratuitous)
+		packet = create_gratuitous_arp_reply(&poison->source);
+	else
+		packet = create_arp_reply(&poison->source, &poison->target);
 	ft_bzero(&addr, sizeof(struct sockaddr_ll));
 	addr.sll_family = AF_PACKET;
 	addr.sll_ifindex = poison->iface.index;
