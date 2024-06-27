@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 17:30:29 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:18:03 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_MALCOLM_H
 
 # include <net/if.h>
+# include <stdbool.h>
 # include <stdint.h>
 
 # define BASE16 "0123456789ABCDEF"
@@ -30,33 +31,35 @@ typedef struct s_host
 	t_mac	mac;
 }	t_host;
 
-typedef struct s_cli
-{
-	t_host	source;
-	t_host	target;
-}	t_cli;
-
 typedef struct s_iface
 {
 	int		index;
+	int		sock_fd;
 	char	name[IFNAMSIZ];
 }	t_iface;
 
 typedef struct s_poison
 {
-	int		sock_fd;
 	t_iface	iface;
 	t_host	source;
 	t_host	target;
+	bool	verbose;
+	bool	show_help;
 }	t_poison;
+
+void		usage(const char *cmd);
 
 void		error(const char *fmt, ...);
 
-int			parse_arguments(t_cli *cli, int argc, char **argv);
+int			parse_ip_addr(const char *addr, t_ip *dest);
+
+int			parse_mac_addr(const char *addr, t_mac dest);
+
+int			parse_arguments(t_poison *poison, int argc, char **argv);
 
 int			find_interface(t_iface *iface);
 
-t_poison	*poison_create(t_host source, t_host target);
+t_poison	*poison_create(void);
 
 void		poison_destroy(t_poison *poison);
 

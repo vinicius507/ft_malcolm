@@ -6,95 +6,96 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/20 16:57:13 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:25:09 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malcolm.h"
-#include <arpa/inet.h>
-#include <errno.h>
 #include <libft.h>
 #include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 
-static int	parse_ip_addr(const char *addr, t_ip *dest)
+void	usage(const char *cmd)
 {
-	int	result;
+	dprintf(STDERR_FILENO,
+		"Usage: %s [OPTION...] SOURCE_IP SOURCE_MAC TARGET_IP TARGET_MAC\n\n"
+		"ARP spoofing tool built for École 42.\n\n"
+		"Positional arguments:\n"
+		"  SOURCE_IP              Source IP address\n"
+		"  SOURCE_MAC             Source MAC address\n"
+		"  TARGET_IP              Target IP address\n"
+		"  TARGET_MAC             Target MAC address\n\n"
+		"Optional arguments:\n"
+		"  -h, --help             Show this help message and exit\n"
+		"  -v, --verbose          Verbose mode\n", cmd);
+}
 
-	if (addr == NULL || dest == NULL)
-		return (1);
-	result = inet_pton(AF_INET, addr, dest);
-	if (result == 1)
-		return (0);
-	if (result == 0)
-		error("Invalid IPv4 address");
-	else
-		error("Invalid IPv4 address: %s", strerror(errno));
+static int	parse_positional(t_poison *poison, char *arg)
+{
+	static int	idx;
+
+	idx = idx + 1;
+	if (idx == 1)
+		return (parse_ip_addr(arg, &poison->source.ip));
+	if (idx == 2)
+		return (parse_mac_addr(arg, poison->source.mac));
+	if (idx == 3)
+		return (parse_ip_addr(arg, &poison->target.ip));
+	if (idx == 4)
+		return (parse_mac_addr(arg, poison->target.mac));
+	error("Invalid argument: %s", arg);
 	return (1);
 }
 
-static int	is_valid_mac_addr(const char *addr)
+static int	parse_option(t_poison *poison, char *arg)
+{
+	if (ft_strcmp(arg, "-v") == 0 || ft_strcmp(arg, "--verbose") == 0)
+	{
+		poison->verbose = 1;
+		return (0);
+	}
+	error("Invalid option: %s", arg);
+	return (1);
+}
+
+static bool	has_help_option(int argc, char **argv)
 {
 	int	idx;
 
-	if (ft_strlen(addr) != 17)
-		return (0);
 	idx = 0;
-	while (addr[idx] != '\0')
+	while (++idx < argc)
 	{
-		if (idx % 3 == 2)
-		{
-			if (addr[idx] != MAC_SEPARATOR)
-				return (0);
-		}
-		else if (ft_strchr(BASE16, ft_toupper(addr[idx])) == NULL)
-			return (0);
-		idx++;
+		if (ft_strcmp(argv[idx], "-h") == 0
+			|| ft_strcmp(argv[idx], "--help") == 0)
+			return (true);
 	}
-	return (1);
+	return (false);
 }
 
-static int	parse_mac_addr(const char *addr, t_mac dest)
+int	parse_arguments(t_poison *poison, int argc, char **argv)
 {
 	int		idx;
-	int		byte;
-	char	*sanitized_mac;
+	bool	is_option;
 
-	if (!is_valid_mac_addr(addr))
+	if (argc < 5)
 	{
-		error("Invalid MAC address: %s", addr);
+		error("Missing required arguments");
 		return (1);
+	}
+	if (has_help_option(argc, argv))
+	{
+		usage(argv[0]);
+		poison_destroy(poison);
+		exit(EXIT_SUCCESS);
 	}
 	idx = 0;
-	byte = 0;
-	sanitized_mac = ft_striter(addr, ft_toupper);
-	if (sanitized_mac == NULL)
+	while (++idx < argc)
 	{
-		error("Failed to parse MAC address");
-		return (1);
+		is_option = argv[idx][0] == '-';
+		if (is_option && parse_option(poison, argv[idx]) != 0)
+			return (1);
+		else if (parse_positional(poison, argv[idx]) != 0)
+			return (1);
 	}
-	while (idx < 17)
-	{
-		dest[byte] = ft_atoi_base(&sanitized_mac[idx], BASE16);
-		byte++;
-		idx += 3;
-	}
-	free(sanitized_mac);
-	return (0);
-}
-
-int	parse_arguments(t_cli *cli, int argc, char **argv)
-{
-	if (argc != 5)
-		return (1);
-	if (parse_ip_addr(argv[1], &cli->source.ip) != 0)
-		return (1);
-	if (parse_mac_addr(argv[2], cli->source.mac) != 0)
-		return (1);
-	if (parse_ip_addr(argv[3], &cli->target.ip) != 0)
-		return (1);
-	if (parse_mac_addr(argv[4], cli->target.mac) != 0)
-		return (1);
 	return (0);
 }

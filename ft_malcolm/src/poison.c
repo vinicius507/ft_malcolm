@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 17:33:24 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:40:55 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,19 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-t_poison	*poison_create(t_host source, t_host target)
+t_poison	*poison_create(void)
 {
 	t_poison	*poison;
 
 	poison = ft_calloc(1, sizeof(t_poison));
-	poison->source = source;
-	poison->target = target;
+	poison->iface.sock_fd = -1;
 	return (poison);
 }
 
 void	poison_destroy(t_poison *poison)
 {
-	if (poison->sock_fd > 0)
-		close(poison->sock_fd);
+	if (poison->iface.sock_fd != -1)
+		close(poison->iface.sock_fd);
 	free(poison);
 }
 
@@ -47,16 +46,16 @@ int	poison_bind_interface(t_poison *poison)
 	if (find_interface(&poison->iface) != 0)
 		return (1);
 	printf("Found interface: %s\n", poison->iface.name);
-	poison->sock_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
-	if (poison->sock_fd == -1)
+	poison->iface.sock_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
+	if (poison->iface.sock_fd == -1)
 	{
 		error("Failed to open socket: %s", strerror(errno));
 		return (1);
 	}
-	printf("Opened socket: %d\n", poison->sock_fd);
+	printf("Opened socket: %d\n", poison->iface.sock_fd);
 	ft_bzero(&req, sizeof(struct ifreq));
 	ft_strlcpy(req.ifr_name, poison->iface.name, IFNAMSIZ);
-	if (setsockopt(poison->sock_fd, SOL_SOCKET, SO_BINDTODEVICE, &req, sizeof(req)) == -1)
+	if (setsockopt(poison->iface.sock_fd, SOL_SOCKET, SO_BINDTODEVICE, &req, sizeof(req)) == -1)
 	{
 		error("Failed to bind socket to interface: %s", strerror(errno));
 		return (1);
@@ -88,7 +87,7 @@ int	poison_listen(t_poison *poison)
 	{
 		if (g_received_signal != 0)
 			return (1);
-		read = recvfrom(poison->sock_fd, &packet, sizeof(t_arp), MSG_DONTWAIT, NULL, NULL);
+		read = recvfrom(poison->iface.sock_fd, &packet, sizeof(t_arp), MSG_DONTWAIT, NULL, NULL);
 		if (read == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
 		{
 			error("Failed to read ARP packet: %s", strerror(errno));
@@ -118,7 +117,7 @@ int	poison_attack(t_poison *poison)
 	addr.sll_halen = ETHER_ADDR_LEN;
 	addr.sll_protocol = htons(ETH_P_ARP);
 	ft_memcpy(addr.sll_addr, poison->target.mac, ETHER_ADDR_LEN);
-	res = sendto(poison->sock_fd, &packet, sizeof(t_arp), 0,
+	res = sendto(poison->iface.sock_fd, &packet, sizeof(t_arp), 0,
 			  (struct sockaddr *)&addr, sizeof(struct sockaddr_ll));
 	if (res == -1)
 	{
