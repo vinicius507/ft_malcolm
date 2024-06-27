@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 18:14:01 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:15:36 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:42:29 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ int	parse_ip_addr(const char *addr, t_ip *dest)
 	else
 		error("Invalid IPv4 address: %s", strerror(errno));
 	return (1);
+}
+
+void	ip_to_str(t_ip ip, char *dest)
+{
+	inet_ntop(AF_INET, &ip, dest, INET_ADDRSTRLEN);
 }
 
 static int	is_valid_mac_addr(const char *addr)

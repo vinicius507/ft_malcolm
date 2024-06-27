@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 17:40:55 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:48:13 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,11 @@ int	poison_listen(t_poison *poison)
 			error("Failed to read ARP packet: %s", strerror(errno));
 			return (1);
 		}
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			continue ;
-		if (is_arp_request(packet) && is_poison_target(poison, &packet))
+		if (read > 0 && is_arp_request(packet) && is_poison_target(poison, &packet))
 		{
 			printf("Received target ARP request\n");
+			if (poison->verbose)
+				print_arp_packet(packet);
 			return (0);
 		}
 		usleep(100);
@@ -125,5 +125,7 @@ int	poison_attack(t_poison *poison)
 		return (1);
 	}
 	printf("Sent spoofed ARP reply\n");
+	if (poison->verbose)
+		print_arp_packet(packet);
 	return (0);
 }

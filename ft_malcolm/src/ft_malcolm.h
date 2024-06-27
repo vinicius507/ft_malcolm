@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:29:33 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:45:34 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void		error(const char *fmt, ...);
 
 int			parse_ip_addr(const char *addr, t_ip *dest);
 
+void		ip_to_str(t_ip ip, char *dest);
+
 int			parse_mac_addr(const char *addr, t_mac dest);
 
 int			parse_arguments(t_poison *poison, int argc, char **argv);
@@ -87,6 +89,8 @@ typedef struct s_arp
 } __attribute__((packed))	t_arp;
 
 int		is_arp_request(t_arp packet);
+
+void	print_arp_packet(t_arp packet);
 
 t_arp	create_arp_reply(t_host *source, t_host *target);
 

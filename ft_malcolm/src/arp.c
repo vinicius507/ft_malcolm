@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:54:27 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:34:52 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:46:04 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,32 @@
 #include <net/if_arp.h>
 #include <netinet/ether.h>
 #include <netinet/in.h>
+#include <stdio.h>
 
 int	is_arp_request(t_arp packet)
 {
 	return (ntohs(packet.ar_op) == 1);
+}
+
+void	print_arp_packet(t_arp packet)
+{
+	char	src_ip[INET_ADDRSTRLEN];
+	char	dst_ip[INET_ADDRSTRLEN];
+
+	ip_to_str(packet.ar_spa, src_ip);
+	ip_to_str(packet.ar_tpa, dst_ip);
+	printf("ARP packet:\n");
+	printf("  Hardware type: %d\n", ntohs(packet.ar_hrd));
+	printf("  Protocol type: 0x%04x\n", ntohs(packet.ar_pro));
+	printf("  Hardware address length: %d\n", packet.ar_hln);
+	printf("  Protocol address length: %d\n", packet.ar_pln);
+	printf("  Opcode: %d\n", ntohs(packet.ar_op));
+	printf("  Sender MAC address: %s\n",
+		ether_ntoa((struct ether_addr *)&packet.ar_sha));
+	printf("  Sender IP address: %s\n", src_ip);
+	printf("  Target MAC address: %s\n",
+		ether_ntoa((struct ether_addr *)&packet.ar_tha));
+	printf("  Target IP address: %s\n", dst_ip);
 }
 
 t_arp	create_arp_reply(t_host *source, t_host *target)
