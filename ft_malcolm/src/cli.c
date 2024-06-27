@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:21:54 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 20:11:17 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	usage(const char *cmd)
 		"Optional arguments:\n"
 		"  -g, --gratuitous       Send a gratuitous ARP broadcast\n"
 		"  -h, --help             Show this help message and exit\n"
+		"  -i, --interface        Network interface to use\n"
 		"  -v, --verbose          Verbose mode\n", cmd);
 }
 
@@ -48,19 +49,30 @@ static int	parse_positional(t_poison *poison, char *arg)
 	return (1);
 }
 
-static int	parse_option(t_poison *poison, char *arg)
+static int	parse_option(t_poison *poison, int *idx, char **argv)
 {
-	if (ft_strcmp(arg, "-g") == 0 || ft_strcmp(arg, "--gratuitous") == 0)
+	if (ft_strcmp(argv[*idx], "-i") == 0 || ft_strcmp(argv[*idx], "--interface") == 0)
+	{
+		*idx += 1;
+		if (argv[*idx] == NULL)
+		{
+			error("Missing value for argv[*idx]: %s", argv[*idx]);
+			return (1);
+		}
+		ft_strlcpy(poison->iface.name, argv[*idx], IFNAMSIZ);
+		return (0);
+	}
+	if (ft_strcmp(argv[*idx], "-g") == 0 || ft_strcmp(argv[*idx], "--gratuitous") == 0)
 	{
 		poison->gratuitous = 1;
 		return (0);
 	}
-	if (ft_strcmp(arg, "-v") == 0 || ft_strcmp(arg, "--verbose") == 0)
+	if (ft_strcmp(argv[*idx], "-v") == 0 || ft_strcmp(argv[*idx], "--verbose") == 0)
 	{
 		poison->verbose = 1;
 		return (0);
 	}
-	error("Invalid option: %s", arg);
+	error("Invalid argv[*idx]: %s", argv[*idx]);
 	return (1);
 }
 
@@ -98,9 +110,9 @@ int	parse_arguments(t_poison *poison, int argc, char **argv)
 	while (++idx < argc)
 	{
 		is_option = argv[idx][0] == '-';
-		if (is_option && parse_option(poison, argv[idx]) != 0)
+		if (is_option && parse_option(poison, &idx, argv) != 0)
 			return (1);
-		else if (parse_positional(poison, argv[idx]) != 0)
+		if (!is_option && parse_positional(poison, argv[idx]) != 0)
 			return (1);
 	}
 	return (0);

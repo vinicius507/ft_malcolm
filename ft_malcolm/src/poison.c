@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:21:22 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:34:39 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ int	poison_bind_interface(t_poison *poison)
 {
 	struct ifreq	req;
 
-	if (find_interface(&poison->iface) != 0)
-		return (1);
-	printf("Found interface: %s\n", poison->iface.name);
 	poison->iface.sock_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
 	if (poison->iface.sock_fd == -1)
 	{

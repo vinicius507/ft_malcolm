@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:15:06 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:37:20 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ static int	run_poison(t_poison *poison)
 	int	res;
 
 	res = 0;
+	if (poison->iface.name[0] != '\0')
+	{
+		poison->iface.index = if_nametoindex(poison->iface.name);
+		if (poison->iface.index == 0)
+		{
+			error("Invalid network interface: %s", poison->iface.name);
+			return (EXIT_FAILURE);
+		}
+	}
+	else if (find_interface(&poison->iface) != 0)
+		return (EXIT_FAILURE);
+	printf("Using network interface: %s\n", poison->iface.name);
 	if (poison_bind_interface(poison) != 0)
 		return (EXIT_FAILURE);
 	if (!poison->gratuitous && poison_listen(poison) != 0)
