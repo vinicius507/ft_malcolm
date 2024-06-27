@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:17:21 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:21:23 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,6 @@ void	print_arp_packet(t_arp packet);
 
 t_arp	create_arp_reply(t_host *source, t_host *target);
 
-t_arp	create_gratuitous_arp_reply(t_host *source);
+t_arp	create_gratuitous_arp_broadcast(t_host *source);
 
 #endif // !FT_MALCOLM_H

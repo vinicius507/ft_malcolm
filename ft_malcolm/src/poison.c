@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:17:40 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:21:22 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	poison_attack(t_poison *poison)
 	t_arp				packet;
 
 	if (poison->gratuitous)
-		packet = create_gratuitous_arp_reply(&poison->source);
+		packet = create_gratuitous_arp_broadcast(&poison->source);
 	else
 		packet = create_arp_reply(&poison->source, &poison->target);
 	ft_bzero(&addr, sizeof(struct sockaddr_ll));
