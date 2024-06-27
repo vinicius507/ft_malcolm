@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:54:27 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:46:04 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:18:46 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,25 @@ t_arp	create_arp_reply(t_host *source, t_host *target)
 	packet.ar_spa = source->ip;
 	ft_memcpy(packet.ar_tha, target->mac, ETHER_ADDR_LEN);
 	packet.ar_tpa = target->ip;
+	return (packet);
+}
+
+t_arp	create_gratuitous_arp_reply(t_host *source)
+{
+	t_arp	packet;
+
+	ft_bzero(&packet, sizeof(t_arp));
+	ft_memset(packet.eth_dst, 0xFF, ETHER_ADDR_LEN);
+	ft_memcpy(packet.eth_src, source->mac, ETHER_ADDR_LEN);
+	packet.eth_type = htons(ETH_P_ARP);
+	packet.ar_hrd = htons(ARPHRD_ETHER);
+	packet.ar_pro = htons(ETH_P_IP);
+	packet.ar_hln = ETHER_ADDR_LEN;
+	packet.ar_pln = INET_ADDRLEN;
+	packet.ar_op = htons(ARPOP_REPLY);
+	ft_memcpy(packet.ar_sha, source->mac, ETHER_ADDR_LEN);
+	packet.ar_spa = source->ip;
+	ft_memset(packet.ar_tha, 0xFF, ETHER_ADDR_LEN);
+	packet.ar_tpa = source->ip;
 	return (packet);
 }

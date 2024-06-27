@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:45:34 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:17:21 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_poison
 	t_host	target;
 	bool	verbose;
 	bool	show_help;
+	bool	gratuitous;
 }	t_poison;
 
 void		usage(const char *cmd);
@@ -93,5 +94,7 @@ int		is_arp_request(t_arp packet);
 void	print_arp_packet(t_arp packet);
 
 t_arp	create_arp_reply(t_host *source, t_host *target);
+
+t_arp	create_gratuitous_arp_reply(t_host *source);
 
 #endif // !FT_MALCOLM_H

@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:25:09 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:08:41 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	usage(const char *cmd)
 		"  TARGET_IP              Target IP address\n"
 		"  TARGET_MAC             Target MAC address\n\n"
 		"Optional arguments:\n"
+		"  -g, --gratuitous       Send a gratuitous ARP packet instead of "
+		"listening\n"
 		"  -h, --help             Show this help message and exit\n"
 		"  -v, --verbose          Verbose mode\n", cmd);
 }
@@ -49,6 +51,11 @@ static int	parse_positional(t_poison *poison, char *arg)
 
 static int	parse_option(t_poison *poison, char *arg)
 {
+	if (ft_strcmp(arg, "-g") == 0 || ft_strcmp(arg, "--gratuitous") == 0)
+	{
+		poison->gratuitous = 1;
+		return (0);
+	}
 	if (ft_strcmp(arg, "-v") == 0 || ft_strcmp(arg, "--verbose") == 0)
 	{
 		poison->verbose = 1;

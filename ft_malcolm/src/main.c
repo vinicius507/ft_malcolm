@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:24:45 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:15:06 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,31 @@ static void	register_signals(void)
 	signal(SIGTERM, signal_handler);
 }
 
+static int	run_poison(t_poison *poison)
+{
+	int	res;
+
+	res = 0;
+	if (poison_bind_interface(poison) != 0)
+		return (EXIT_FAILURE);
+	if (!poison->gratuitous && poison_listen(poison) != 0)
+	{
+		if (g_received_signal != 0)
+			return (g_received_signal + 128);
+		return (EXIT_FAILURE);
+	}
+	res = poison_attack(poison);
+	return (res);
+}
+
 int	main(int argc, char **argv)
 {
-	int			res;
 	t_poison	*poison;
+	int			exit_code;
 
 	poison = poison_create();
+	if (poison == NULL)
+		return (EXIT_FAILURE);
 	if (parse_arguments(poison, argc, argv) != 0)
 	{
 		usage(argv[0]);
@@ -44,14 +63,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	register_signals();
-	if (poison_bind_interface(poison) != 0 || poison_listen(poison) != 0)
-	{
-		poison_destroy(poison);
-		if (g_received_signal != 0)
-			return (g_received_signal + 128);
-		return (EXIT_FAILURE);
-	}
-	res = poison_attack(poison);
+	exit_code = run_poison(poison);
 	poison_destroy(poison);
-	return (res);
+	return (exit_code);
 }
