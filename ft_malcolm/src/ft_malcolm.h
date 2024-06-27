@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 18:18:03 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:29:33 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # define BASE16 "0123456789ABCDEF"
 # define MAC_SEPARATOR ':'
+# define INET_ADDRLEN 4
 
 extern int	g_received_signal;
 
