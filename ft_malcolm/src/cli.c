@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 20:11:17 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/28 10:57:04 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,16 @@ int	parse_arguments(t_poison *poison, int argc, char **argv)
 	int		idx;
 	bool	is_option;
 
-	if (argc < 5)
-	{
-		error("Missing required arguments");
-		return (1);
-	}
 	if (has_help_option(argc, argv))
 	{
 		usage(argv[0]);
 		poison_destroy(poison);
 		exit(EXIT_SUCCESS);
+	}
+	if (argc < 5)
+	{
+		error("Missing required arguments");
+		return (1);
 	}
 	idx = 0;
 	while (++idx < argc)
