@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:54:27 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:21:23 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/28 11:02:14 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 #include <netinet/in.h>
 #include <stdio.h>
 
-int	is_arp_request(t_arp packet)
+int	is_arp_request(t_arp_packet packet)
 {
 	return (ntohs(packet.ar_op) == 1);
 }
 
-void	print_arp_packet(t_arp packet)
+void	print_arp_packet(t_arp_packet packet)
 {
 	char	src_ip[INET_ADDRSTRLEN];
 	char	dst_ip[INET_ADDRSTRLEN];
@@ -43,11 +43,11 @@ void	print_arp_packet(t_arp packet)
 	printf("  Target IP address: %s\n", dst_ip);
 }
 
-t_arp	create_arp_reply(t_host *source, t_host *target)
+t_arp_packet	create_arp_reply(t_host *source, t_host *target)
 {
-	t_arp	packet;
+	t_arp_packet	packet;
 
-	ft_bzero(&packet, sizeof(t_arp));
+	ft_bzero(&packet, sizeof(t_arp_packet));
 	ft_memcpy(packet.eth_dst, target->mac, ETHER_ADDR_LEN);
 	ft_memcpy(packet.eth_src, source->mac, ETHER_ADDR_LEN);
 	packet.eth_type = htons(ETH_P_ARP);
@@ -63,11 +63,11 @@ t_arp	create_arp_reply(t_host *source, t_host *target)
 	return (packet);
 }
 
-t_arp	create_gratuitous_arp_broadcast(t_host *source)
+t_arp_packet	create_gratuitous_arp_broadcast(t_host *source)
 {
-	t_arp	packet;
+	t_arp_packet	packet;
 
-	ft_bzero(&packet, sizeof(t_arp));
+	ft_bzero(&packet, sizeof(t_arp_packet));
 	ft_memset(packet.eth_dst, 0xFF, ETHER_ADDR_LEN);
 	ft_memcpy(packet.eth_src, source->mac, ETHER_ADDR_LEN);
 	packet.eth_type = htons(ETH_P_ARP);

