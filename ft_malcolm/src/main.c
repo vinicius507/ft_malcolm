@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/27 19:37:20 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/28 11:00:22 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	run_poison(t_poison *poison)
 {
 	int	res;
 
-	res = 0;
 	if (poison->iface.name[0] != '\0')
 	{
 		poison->iface.index = if_nametoindex(poison->iface.name);
