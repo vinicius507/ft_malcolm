@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/28 11:18:10 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/06/29 16:11:47 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,11 @@ int	main(int argc, char **argv)
 	t_poison	*poison;
 	int			exit_code;
 
+	if (getuid() != 0)
+	{
+		error("You must have root privileges to run this program");
+		return (EXIT_FAILURE);
+	}
 	poison = poison_create();
 	if (poison == NULL)
 		return (EXIT_FAILURE);
