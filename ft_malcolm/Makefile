@@ -6,7 +6,7 @@
 #    By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/02 15:23:08 by vgoncalv          #+#    #+#              #
-#    Updated: 2024/06/27 18:16:26 by vgoncalv         ###   ########.fr        #
+#    Updated: 2024/06/29 21:06:24 by vgoncalv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,22 +22,43 @@ vpath %.c $(SRCS_DIR)
 SRCS = main.c addr.c cli.c error.c poison.c interface.c arp.c
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
+ifneq ($(LIBFT_DIR),)
+	CFLAGS += -I $(LIBFT_DIR)/include
+	LIBFT = $(LIBFT_DIR)/libft.a
+endif
+
 all: $(NAME)
 
+ifeq ($(LIBFT_DIR),)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ -lft
-
-$(OBJS_DIR)/%.o: %.c | $(OBJS_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OBJS_DIR):
-	mkdir -p $@
 
 clean:
 	rm -rf $(OBJS_DIR)
 
 fclean: clean
 	rm -f $(NAME)
+else
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ -L$(LIBFT_DIR) -lft
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
+
+clean:
+	make -C $(LIBFT_DIR) clean
+	rm -rf $(OBJS_DIR)
+
+fclean: clean
+	make -C $(LIBFT_DIR) fclean
+	rm -f $(NAME)
+endif
+
+$(OBJS_DIR)/%.o: %.c | $(OBJS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJS_DIR):
+	mkdir -p $@
 
 re: fclean all
 
