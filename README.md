@@ -1,13 +1,18 @@
 # 42 Malcolm
 
-An ARP Poisoning tool written in C with the 99 standard.
+An ARP Poisoning tool written in C using the 99 standard.
 
 > [!WARNING]
 >
-> This tool is for educational purposes only. ARP Poisoning is a technique used
-> in Man-in-the-Middle (MitM) attacks. It's crucial to understand the potential
-> risks and only use this tool in controlled environments with explicit
-> permission.
+> This application performs ARP spoofing, a network attack technique that can
+> disrupt communication on a network. Using ARP spoofing without permission is
+> a violation of security policies and may be illegal. It's crucial to only use
+> this tool in controlled environments, such as a personal lab network, for
+> educational or testing purposes.
+> 
+> This tool was built as part of the École 42 Security curriculum and is
+> intended for educational purposes only. The author does not condone or
+> encourage the use of this tool for malicious purposes.
 
 ## What is ARP?
 
