@@ -2,7 +2,7 @@
 
 An ARP Poisoning tool written in C with the 99 standard.
 
-> [!WARN]
+> [!WARNING]
 >
 > This tool is for educational purposes only. ARP Poisoning is a technique used
 > in Man-in-the-Middle (MitM) attacks. It's crucial to understand the potential
