@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 17:48:58 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:52:50 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	signal_handler(int sig)
 		[SIGTERM] = "SIGTERM"
 	};
 
-	printf("Received signal %s, exiting...\n", signals[sig]);
+	printf("\nReceived signal %s, exiting...\n", signals[sig]);
 	g_received_signal = sig;
 }
 
