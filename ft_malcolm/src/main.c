@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:22:39 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/29 16:11:47 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:48:58 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,55 +38,29 @@ static void	register_signals(void)
 	signal(SIGTERM, signal_handler);
 }
 
-static int	run_poison(t_poison *poison)
-{
-	int	res;
-
-	if (poison->iface.name[0] != '\0')
-	{
-		poison->iface.index = if_nametoindex(poison->iface.name);
-		if (poison->iface.index == 0)
-		{
-			error("Invalid network interface: %s", poison->iface.name);
-			return (EXIT_FAILURE);
-		}
-	}
-	else if (find_interface(&poison->iface) != 0)
-		return (EXIT_FAILURE);
-	printf("Using network interface: %s\n", poison->iface.name);
-	if (poison_bind_interface(poison) != 0)
-		return (EXIT_FAILURE);
-	if (!poison->gratuitous && poison_listen(poison) != 0)
-	{
-		if (g_received_signal != 0)
-			return (g_received_signal + 128);
-		return (EXIT_FAILURE);
-	}
-	res = poison_attack(poison);
-	return (res);
-}
-
 int	main(int argc, char **argv)
 {
-	t_poison	*poison;
-	int			exit_code;
+	t_poison	poison;
 
+	poison_init(&poison);
+	if (parse_arguments(&poison, argc, argv) != 0)
+		return (usage(argv[0]), EXIT_FAILURE);
 	if (getuid() != 0)
 	{
 		error("You must have root privileges to run this program");
 		return (EXIT_FAILURE);
 	}
-	poison = poison_create();
-	if (poison == NULL)
+	register_signals();
+	if (poison.iface.index == 0 && find_interface(&poison.iface) != 0)
 		return (EXIT_FAILURE);
-	if (parse_arguments(poison, argc, argv) != 0)
+	printf("Using network interface: %s\n", poison.iface.name);
+	if (poison_bind_interface(&poison) != 0 || poison_attack(&poison) != 0)
 	{
-		usage(argv[0]);
-		poison_destroy(poison);
+		poison_destroy(&poison);
+		if (g_received_signal != 0)
+			return (g_received_signal + 128);
 		return (EXIT_FAILURE);
 	}
-	register_signals();
-	exit_code = run_poison(poison);
-	poison_destroy(poison);
-	return (exit_code);
+	poison_destroy(&poison);
+	return (EXIT_SUCCESS);
 }

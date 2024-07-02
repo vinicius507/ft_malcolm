@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/28 10:57:04 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:46:43 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <libft.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <net/ethernet.h>
 
 void	usage(const char *cmd)
 {
@@ -55,16 +56,18 @@ static int	parse_option(t_poison *poison, int *idx, char **argv)
 	{
 		*idx += 1;
 		if (argv[*idx] == NULL)
-		{
-			error("Missing value for argv[*idx]: %s", argv[*idx]);
-			return (1);
-		}
+			return (error("Missing value for argv[*idx]: %s", argv[*idx]), 1);
+		poison->iface.index = if_nametoindex(argv[*idx]);
+		if (poison->iface.index == 0)
+			return (error("Invalid network interface: %s", argv[*idx]), 1);
 		ft_strlcpy(poison->iface.name, argv[*idx], IFNAMSIZ);
 		return (0);
 	}
 	if (ft_strcmp(argv[*idx], "-g") == 0 || ft_strcmp(argv[*idx], "--gratuitous") == 0)
 	{
-		poison->gratuitous = 1;
+		poison->gratuitous = true;
+		poison->target.ip = poison->source.ip;
+		ft_memset(poison->target.mac, 0xFF, ETHER_ADDR_LEN);
 		return (0);
 	}
 	if (ft_strcmp(argv[*idx], "-v") == 0 || ft_strcmp(argv[*idx], "--verbose") == 0)
@@ -72,8 +75,7 @@ static int	parse_option(t_poison *poison, int *idx, char **argv)
 		poison->verbose = 1;
 		return (0);
 	}
-	error("Invalid argv[*idx]: %s", argv[*idx]);
-	return (1);
+	return (error("Invalid argv[*idx]: %s", argv[*idx]), 1);
 }
 
 static bool	has_help_option(int argc, char **argv)
@@ -98,7 +100,6 @@ int	parse_arguments(t_poison *poison, int argc, char **argv)
 	if (has_help_option(argc, argv))
 	{
 		usage(argv[0]);
-		poison_destroy(poison);
 		exit(EXIT_SUCCESS);
 	}
 	if (argc < 5)

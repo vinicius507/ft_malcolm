@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/06/28 11:02:57 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:51:00 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int			parse_arguments(t_poison *poison, int argc, char **argv);
 
 int			find_interface(t_iface *iface);
 
-t_poison	*poison_create(void);
+void		poison_init(t_poison *poison);
 
 void		poison_destroy(t_poison *poison);
 
@@ -89,12 +89,12 @@ typedef struct s_arp
 	t_ip		ar_tpa;
 } __attribute__((packed))	t_arp_packet;
 
-int				is_arp_request(t_arp_packet packet);
+int				is_arp_request(t_arp_packet *packet);
 
-void			print_arp_packet(t_arp_packet packet);
+void			print_arp_packet(t_arp_packet *packet);
 
-t_arp_packet	create_arp_reply(t_host *source, t_host *target);
+t_arp_packet	create_arp_packet(int op, t_host *source, t_host *target);
 
-t_arp_packet	create_gratuitous_arp_broadcast(t_host *source);
+int				send_arp_packet(t_poison *poison, t_arp_packet *packet);
 
 #endif // !FT_MALCOLM_H
