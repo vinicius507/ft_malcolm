@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 19:51:03 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 20:32:36 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,19 @@ static int	parse_argument(int key, char *arg, struct argp_state *state)
 int	parse_arguments(t_poison *poison, int argc, char **argv)
 {
 	const struct argp	args = {
-		.args_doc = "SOURCE_IP SOURCE_MAC [TARGET_IP] [TARGET_MAC]",
+		.args_doc = "SOURCE_IP SOURCE_MAC TARGET_IP TARGET_MAC",
 		.doc = "ARP Poisoning tool built for École 42 written by vgoncalv",
 		.parser = parse_argument,
 		.options = (struct argp_option[]){
-			{.name = "gratuitous", .key = 'g', .doc = "Send a gratuitous ARP broadcast"},
-			{.name = "interface", .key = 'i', .arg = "NAME", .doc = "Network interface to use"},
-			{.name = "verbose", .key = 'v', .doc = "Verbose mode"},
+			{ .doc = "Positional Arguments:" },
+			{ .name = "SOURCE_IP", .doc = "IP address to be spoofed as the source", .flags = OPTION_DOC },
+			{ .name = "SOURCE_MAC", .doc = "MAC address to be spoofed as the source", .flags = OPTION_DOC },
+			{ .name = "TARGET_IP", .doc = "IP address of the target host", .flags = OPTION_DOC },
+			{ .name = "TARGET_MAC", .doc = "MAC address of the target host", .flags = OPTION_DOC },
+			{ .doc = "Optional Arguments:" },
+			{ .name = "gratuitous", .key = 'g', .doc = "Send a gratuitous ARP broadcast" },
+			{ .name = "interface", .key = 'i', .arg = "NAME", .doc = "Network interface to use" },
+			{ .name = "verbose", .key = 'v', .doc = "Enables verbose output for packet information" },
 			{0},
 		},
 	};
