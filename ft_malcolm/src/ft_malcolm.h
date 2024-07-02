@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 17:51:00 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 18:15:06 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ typedef struct s_poison
 	bool	show_help;
 	bool	gratuitous;
 }	t_poison;
-
-void		usage(const char *cmd);
 
 void		error(const char *fmt, ...);
 

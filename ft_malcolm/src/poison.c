@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:21:24 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 17:51:49 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:15:42 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@
 
 void	poison_init(t_poison *poison)
 {
-	*poison = (t_poison){
-		.iface.sock_fd = -1,
-	};
+	poison->iface.sock_fd = -1;
+	ft_memset(&poison->target.mac, 0xFF, sizeof(t_mac));
 }
 
 void	poison_destroy(t_poison *poison)
@@ -103,7 +102,9 @@ int	poison_attack(t_poison *poison)
 {
 	t_arp_packet	packet;
 
-	if (!poison->gratuitous)
+	if (poison->gratuitous)
+		printf("Sending gratuitous ARP broadcast\n");
+	else
 	{
 		printf("Waiting for target ARP request\n");
 		if (poison_listen(poison) != 0)
