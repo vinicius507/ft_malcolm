@@ -103,8 +103,7 @@ handle downloading and linking dependencies automatically.
 
 **Optional Arguments:**
 
-- `-g, --gratuious`: Send a gratuitous ARP packet to broadcast (ff:ff:ff:ff:ff:ff).
-- `-h, --help`: Show the help message and exit.
+- `-g, --gratuitous`: Send a gratuitous ARP packet to broadcast (`FF:FF:FF:FF:FF:FF`).
 - `-i, --interface`: The network interface to use, if not specified, the first
 available interface will be used.
 - `-v, --verbose`: Enable verbose output for packet information.
