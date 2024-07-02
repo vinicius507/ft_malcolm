@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:08:05 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 19:28:11 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:51:03 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,28 @@
 
 static int	parse_positional(int key, char *arg, struct argp_state *state)
 {
-	static int	pos;
 	t_poison	*poison;
 
 	poison = state->input;
 	if (key == ARGP_KEY_END)
 	{
-		if ((poison->gratuitous && pos < 2) || (!poison->gratuitous && pos < 4))
+		if ((poison->gratuitous && state->arg_num < 1)
+			|| (!poison->gratuitous && state->arg_num < 3))
 			argp_failure(state, EXIT_FAILURE, 0, "Missing required arguments");
 		return (0);
 	}
-	pos++;
-	if ((poison->gratuitous && pos > 2) || (!poison->gratuitous && pos > 4))
+	if ((poison->gratuitous && state->arg_num > 1)
+		|| (!poison->gratuitous && state->arg_num > 3))
 		argp_failure(state, EXIT_FAILURE, 0, "Too many arguments");
-	if (pos == 1)
+	if (state->arg_num == 0)
 		return (parse_ip_addr(arg, &poison->source.ip));
-	if (pos == 2)
+	if (state->arg_num == 1)
 		return (parse_mac_addr(arg, poison->source.mac));
-	if (pos == 3)
+	if (state->arg_num == 2)
 		return (parse_ip_addr(arg, &poison->target.ip));
-	if (pos == 4)
+	if (state->arg_num == 3)
 		return (parse_mac_addr(arg, poison->target.mac));
-	return (0);
+	return (ARGP_ERR_UNKNOWN);
 }
 
 static int	parse_option(int key, char *arg, struct argp_state *state)
