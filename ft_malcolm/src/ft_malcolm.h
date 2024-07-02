@@ -6,7 +6,7 @@
 /*   By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 19:40:17 by vgoncalv          #+#    #+#             */
-/*   Updated: 2024/07/02 18:15:06 by vgoncalv         ###   ########.fr       */
+/*   Updated: 2024/07/02 20:44:39 by vgoncalv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@
 # define BASE16 "0123456789ABCDEF"
 # define MAC_SEPARATOR ':'
 # define INET_ADDRLEN 4
+
+# define SOURCE_IP_DOC "IP address to be spoofed as the source"
+# define SOURCE_MAC_DOC "MAC address to be spoofed as the source"
+# define TARGET_IP_DOC                                                         \
+  "IP address of the target host."                                             \
+  " Not required for gratuitous ARP"
+# define TARGET_MAC_DOC                                                        \
+  "MAC address of the target host."                                            \
+  " Not required for gratuitous ARP"
+# define GRATUITOUS_DOC                                                        \
+  "Send a gratuitous ARP packet to the network."                               \
+  " This will poison the ARP cache of all hosts in the network"
+# define INTERFACE_DOC                                                         \
+  "Name of the network interface to be used"                                   \
+  " If not provided, the program will use the first available interface"
+# define VERBOSE_DOC "Enables verbose output for packet information"
 
 extern int	g_received_signal;
 
