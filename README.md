@@ -5,6 +5,9 @@
 ![Status](https://img.shields.io/badge/Status-Pending_Evaluation-darkgrey.svg?logo=42)
 [![Tests](https://github.com/vinicius507/ft_malcolm/actions/workflows/tests.yml/badge.svg)](https://github.com/vinicius507/ft_malcolm/actions/workflows/tests.yml)
 
+[![en](https://img.shields.io/badge/Lang-en-red.svg)](./README.md)
+[![pt-br](https://img.shields.io/badge/Lang-pt--br-green.svg)](./README.pt-br.md)
+
 An ARP Poisoning tool written in C using the 99 standard.
 
 > [!WARNING]
