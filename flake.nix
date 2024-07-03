@@ -24,6 +24,7 @@
               libft.overlays.libft
               libft.overlays.devshell
               self.overlays.ft_malcolm
+              self.overlays.minunit
             ];
           };
         });
@@ -46,10 +47,17 @@
         inherit (pkgs) lib libft;
         inherit (pkgs.llvmPackages_12) stdenv;
       };
+      minunit = import ./nix/pkgs/minunit.nix {
+        inherit (pkgs) lib fetchFromGitHub;
+        stdenv = pkgs.stdenvNoCC;
+      };
     });
     overlays = {
       ft_malcolm = final: _: {
         ft_malcolm = self.packages.${final.system}.ft_malcolm;
+      };
+      minunit = final: _: {
+        minunit = self.packages.${final.system}.minunit;
       };
     };
     devShells = forEachSystem ({pkgs}: {
@@ -58,6 +66,7 @@
           bear
           clang-tools_12
           gnumake
+          minunit
           norminette
           valgrind
           pkgs.libft
