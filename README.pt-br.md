@@ -183,3 +183,7 @@ GUEST_2_IP       0x1         0x2         ATTACKER_MAC         *        BRIDGE
 
 Isso irá interceptar todo o tráfego de `GUEST_1` para `GUEST_2`, permitindo que
 você inspecione e modifique os pacotes conforme necessário.
+
+| ![Screenshot do Wireshark mostrando um reply HTTP interceptado](./assets/wireshark.png) |
+| :-------------------------------------------------------------------------------------: |
+|                    _Wireshark mostrando um reply HTTP interceptado_                     |

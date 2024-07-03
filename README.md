@@ -178,3 +178,7 @@ GUEST_2_IP       0x1         0x2         ATTACKER_MAC          *        BRIDGE
 
 This will intercept all traffic from `GUEST_1` to `GUEST_2`, allowing you to
 inspect and modify packets as needed.
+
+| ![Screenshot of Wireshark showing an intercepted HTTP reply](./assets/wireshark.png) |
+| :----------------------------------------------------------------------------------: |
+|                    _Wireshark showing an intercepted HTTP reply_                     |
