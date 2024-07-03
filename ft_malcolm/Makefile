@@ -6,7 +6,7 @@
 #    By: vgoncalv <vgoncalv@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/02 15:23:08 by vgoncalv          #+#    #+#              #
-#    Updated: 2024/06/29 21:06:24 by vgoncalv         ###   ########.fr        #
+#    Updated: 2024/07/02 23:33:34 by vgoncalv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,14 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRCS_DIR = ./src
 OBJS_DIR = ./build
+TESTS_DIR = ./tests
 
-vpath %.c $(SRCS_DIR)
+vpath %.c $(SRCS_DIR) $(TESTS_DIR)
 SRCS = main.c addr.c cli.c error.c poison.c interface.c arp.c
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
+
+TESTS_SRCS = $(filter-out main.c, $(SRCS)) test_main.c
+TESTS_OBJS = $(addprefix $(OBJS_DIR)/, $(TESTS_SRCS:.c=.o))
 
 ifneq ($(LIBFT_DIR),)
 	CFLAGS += -I $(LIBFT_DIR)/include
@@ -51,7 +55,7 @@ clean:
 
 fclean: clean
 	make -C $(LIBFT_DIR) fclean
-	rm -f $(NAME)
+	rm -f $(NAME) run_tests
 endif
 
 $(OBJS_DIR)/%.o: %.c | $(OBJS_DIR)
@@ -62,4 +66,7 @@ $(OBJS_DIR):
 
 re: fclean all
 
-.PHONY: all clean fclean re
+tests: $(NAME) $(TESTS_OBJS)
+	$(CC) $(CFLAGS) -o run_tests $(TESTS_OBJS) -L. -lft
+
+.PHONY: all clean fclean re tests

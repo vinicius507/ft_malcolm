@@ -30,15 +30,8 @@
         });
   in {
     checks = forEachSystem ({pkgs}: {
-      norminette-check = pkgs.stdenvNoCC.mkDerivation {
-        name = "norminette-check";
-        src = ./ft_malcolm;
-        dontBuild = true;
-        doCheck = true;
-        checkPhase = with pkgs; ''
-          ${norminette}/bin/norminette $src
-        '';
-        installPhase = "touch $out"; # Derivation must build an output.
+      tests = import ./nix/checks/tests.nix {
+        inherit (pkgs) stdenv libft minunit;
       };
     });
     packages = forEachSystem ({pkgs}: {
