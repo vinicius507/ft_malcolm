@@ -1,5 +1,10 @@
 # 42 Malcolm
 
+![OS](https://img.shields.io/badge/OS-Linux-blue.svg)
+![Language](https://img.shields.io/badge/Language-C-orange.svg)
+![Status](https://img.shields.io/badge/Status-Pending_Evaluation-darkgrey.svg?logo=42)
+[![Tests](https://github.com/vinicius507/ft_malcolm/actions/workflows/tests.yml/badge.svg)](https://github.com/vinicius507/ft_malcolm/actions/workflows/tests.yml)
+
 An ARP Poisoning tool written in C using the 99 standard.
 
 > [!WARNING]
