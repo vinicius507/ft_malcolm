@@ -34,8 +34,8 @@ O protocolo ARP é um protocolo _stateless_, o que significa que os hosts da
 rede armazenarão em cache automaticamente qualquer resposta ARP que receberem,
 independentemente de ter sido solicitada ou não.
 
-O ARP poisoning funciona enviando respostas ARP não solicitadas a um host,
-associando um endereço de protocolo ao endereço de hardware do atacante.
+O ARP poisoning funciona enviando respostas ARP forjadas a um host, associando
+um endereço de protocolo ao endereço de hardware do atacante.
 
 ## Uso
 

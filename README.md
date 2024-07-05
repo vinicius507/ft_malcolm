@@ -34,8 +34,8 @@ The ARP protocol is a stateless protocol, meaning that network hosts will
 automatically cache any ARP replies they receive, regardless of whether they
 requested them.
 
-ARP poisoning works by sending unsolicited ARP replies to a host, associating
-a protocol address to the attackers hardware address.
+ARP poisoning works by sending forged ARP replies to a host, associating a
+protocol address to the attackers hardware address.
 
 ## Usage
 
